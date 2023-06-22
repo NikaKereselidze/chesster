@@ -1,0 +1,41 @@
+{
+  "name": "chesster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engine": {
+    "node": ">=8.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "files": [
+    "index.js",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nikakereselidze/chesster.git"
+  },
+  "author": "NikaKereselidze",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nikakereselidze/chesster/issues"
+  },
+  "keywords": [
+    "chess",
+    "chesster",
+    "chess game",
+    "fen",
+    "pgn",
+    "chessboard",
+    "chess.js",
+    "chessboard.js",
+    "chessboardjs"
+  ],
+  "homepage": "https://github.com/nikakereselidze/chesster#readme",
+  "dependencies": {
+    "chess-web-api": "^1.1.2",
+    "chess.js": "^1.0.0-beta.6"
+  }
+}
