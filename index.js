@@ -26,6 +26,35 @@ module.exports = class Chesster {
     };
   }
 
+  async getElo() {
+    const chessAPI = new ChessWebAPI();
+    const resp = await chessAPI.getGameByID(this.chessId);
+    const whiteElo = resp.body.game.pgnHeaders.WhiteElo;
+    const blackElo = resp.body.game.pgnHeaders.BlackElo;
+    return {
+      whiteElo,
+      blackElo,
+    };
+  }
+
+  async getPlayerUsernames() {
+    const chessAPI = new ChessWebAPI();
+    const resp = await chessAPI.getGameByID(this.chessId);
+    return {
+      whitePlayer: resp.body.game.pgnHeaders.White,
+      blackPlayer: resp.body.game.pgnHeaders.Black,
+    };
+  }
+
+  async getPlayerData() {
+    const chessAPI = new ChessWebAPI();
+    const resp = await chessAPI.getGameByID(this.chessId);
+    return {
+      topPlayer: resp.body.players.top,
+      bottomPlayer: resp.body.players.bottom,
+    };
+  }
+
   async getMoves() {
     const chessAPI = new ChessWebAPI();
     const resp = await chessAPI.getGameByID(this.chessId);
@@ -120,6 +149,15 @@ module.exports = class Chesster {
     }
     return {
       game: resultArray,
+      whitePlayer: resp.body.game.pgnHeaders.White,
+      blackPlayer: resp.body.game.pgnHeaders.Black,
+      isAbortable: resp.body.game.pgnHeaders.isAbortable,
+      isAnalyzable: resp.body.game.pgnHeaders.isAnalyzable,
+      isCheckMate: resp.body.game.pgnHeaders.isCheckMate,
+      isStalemate: resp.body.game.pgnHeaders.isStalemate,
+      isFinished: resp.body.game.pgnHeaders.isFinished,
+      isRated: resp.body.game.pgnHeaders.isRated,
+      isResignable: resp.body.game.pgnHeaders.isResignable,
       whiteElo,
       blackElo,
       averageElo,
