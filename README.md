@@ -45,13 +45,13 @@ const elo = chess.getElo();
 Get players usernames of the chess game
 
 ```js
-const elo = chess.getPlayerUsernames();
+const playerUsernames = chess.getPlayerUsernames();
 ```
 
 Get players data of the chess game (top and bottom side)
 
 ```js
-const elo = chess.getPlayerData();
+const playerData = chess.getPlayerData();
 ```
 
 Get average elo of both players
@@ -70,4 +70,5 @@ const all = chess.getAll();
 
 ```
 npm install chesster
+yarn add chesster
 ```
