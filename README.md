@@ -30,10 +30,28 @@ Get winner of the chess game
 const winner = chess.getWinner();
 ```
 
-Get winner of the chess game
+Get result message of the chess game
 
 ```js
 const resultMessage = chess.getResultMessage();
+```
+
+Get players elo of the chess game
+
+```js
+const elo = chess.getElo();
+```
+
+Get players usernames of the chess game
+
+```js
+const elo = chess.getPlayerUsernames();
+```
+
+Get players data of the chess game (top and bottom side)
+
+```js
+const elo = chess.getPlayerData();
 ```
 
 Get average elo of both players
@@ -42,7 +60,7 @@ Get average elo of both players
 const averageElo = chess.getAverageElo();
 ```
 
-Get all data (black and white player's elo, their average elo, moves and fens with timestamps, winner and result message)
+Get all data (black and white player's elo, their average elo, moves and fens with timestamps, winner and result message and etc)
 
 ```js
 const all = chess.getAll();
