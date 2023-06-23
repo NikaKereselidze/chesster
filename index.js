@@ -4,17 +4,19 @@ const ChessWebAPI = require("chess-web-api");
 module.exports = class Chesster {
   constructor(chessId) {
     this.chessId = chessId;
+    this.chessAPI = new ChessWebAPI();
+  }
+
+  async initialize() {
+    this.chessData = await this.chessAPI.getGameByID(this.chessId);
   }
 
   async getFen() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
-
     const chess = new Chess();
     const newChessBoard = new Chess(
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     );
-    chess.loadPgn(resp.body.game.pgn, { sloppy: true });
+    chess.loadPgn(this.chessData.body.game.pgn, { sloppy: true });
     let moves = chess.history();
     let fenArray = [];
     for (let move of moves) {
@@ -27,84 +29,61 @@ module.exports = class Chesster {
   }
 
   async getElo() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
-    const whiteElo = resp.body.game.pgnHeaders.WhiteElo;
-    const blackElo = resp.body.game.pgnHeaders.BlackElo;
     return {
-      whiteElo,
-      blackElo,
+      whiteElo: this.chessData.body.game.pgnHeaders.WhiteElo,
+      blackElo: this.chessData.body.game.pgnHeaders.BlackElo,
     };
   }
 
   async getPlayerUsernames() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
     return {
-      whitePlayer: resp.body.game.pgnHeaders.White,
-      blackPlayer: resp.body.game.pgnHeaders.Black,
+      whitePlayer: this.chessData.body.game.pgnHeaders.White,
+      blackPlayer: this.chessData.body.game.pgnHeaders.Black,
     };
   }
 
   async getPlayerData() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
     return {
-      topPlayer: resp.body.players.top,
-      bottomPlayer: resp.body.players.bottom,
+      topPlayer: this.chessData.body.players.top,
+      bottomPlayer: this.chessData.body.players.bottom,
     };
   }
 
   async getMoves() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
-
     const chess = new Chess();
-    chess.loadPgn(resp.body.game.pgn, { sloppy: true });
+    chess.loadPgn(this.chessData.body.game.pgn, { sloppy: true });
     let moves = chess.history();
     return {
       moves,
     };
   }
   async getAverageElo() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
-    const whiteElo = resp.body.game.pgnHeaders.WhiteElo;
-    const blackElo = resp.body.game.pgnHeaders.BlackElo;
+    const whiteElo = this.chessData.body.game.pgnHeaders.WhiteElo;
+    const blackElo = this.chessData.body.game.pgnHeaders.BlackElo;
     const averageElo = whiteElo + blackElo / 2;
     return {
       averageElo,
     };
   }
   async getWinner() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
     return {
-      winner: resp.body.game.colorOfWinner
-        ? resp.body.game.colorOfWinner
+      winner: this.chessData.body.game.colorOfWinner
+        ? this.chessData.body.game.colorOfWinner
         : "draw",
     };
   }
   async getResultMessage() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
     return {
-      resultMessage: resp.body.game.resultMessage,
+      resultMessage: this.chessData.body.game.resultMessage,
     };
   }
 
   async getAll() {
-    const chessAPI = new ChessWebAPI();
-    const resp = await chessAPI.getGameByID(this.chessId);
-    const whiteElo = resp.body.game.pgnHeaders.WhiteElo;
-    const blackElo = resp.body.game.pgnHeaders.BlackElo;
-    const averageElo = whiteElo + blackElo / 2;
-
     const chess = new Chess();
     const newChessBoard = new Chess(
       "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
     );
-    chess.loadPgn(resp.body.game.pgn, { sloppy: true });
+    chess.loadPgn(this.chessData.body.game.pgn, { sloppy: true });
     let moves = chess.history();
     let fenArray = [];
     for (let move of moves) {
@@ -112,7 +91,8 @@ module.exports = class Chesster {
       fenArray.push(newChessBoard.fen());
     }
     let resultArray = [];
-    const splittedMoveTimestamps = resp.body.game.moveTimestamps.split(",");
+    const splittedMoveTimestamps =
+      this.chessData.body.game.moveTimestamps.split(",");
     let formattedTimestampsArray = [];
     const convertSecondsToHMS = (seconds) => {
       var sec_num = parseInt(seconds, 10) / 10;
@@ -149,22 +129,25 @@ module.exports = class Chesster {
     }
     return {
       game: resultArray,
-      whitePlayer: resp.body.game.pgnHeaders.White,
-      blackPlayer: resp.body.game.pgnHeaders.Black,
-      isAbortable: resp.body.game.pgnHeaders.isAbortable,
-      isAnalyzable: resp.body.game.pgnHeaders.isAnalyzable,
-      isCheckMate: resp.body.game.pgnHeaders.isCheckMate,
-      isStalemate: resp.body.game.pgnHeaders.isStalemate,
-      isFinished: resp.body.game.pgnHeaders.isFinished,
-      isRated: resp.body.game.pgnHeaders.isRated,
-      isResignable: resp.body.game.pgnHeaders.isResignable,
-      whiteElo,
-      blackElo,
-      averageElo,
-      winner: resp.body.game.colorOfWinner
-        ? resp.body.game.colorOfWinner
+      whitePlayer: this.chessData.body.game.pgnHeaders.White,
+      blackPlayer: this.chessData.body.game.pgnHeaders.Black,
+      isAbortable: this.chessData.body.game.isAbortable,
+      isAnalyzable: this.chessData.body.game.isAnalyzable,
+      isCheckMate: this.chessData.body.game.isCheckmate,
+      isStalemate: this.chessData.body.game.isStalemate,
+      isFinished: this.chessData.body.game.isFinished,
+      isRated: this.chessData.body.game.isRated,
+      isResignable: this.chessData.body.game.isResignable,
+      whiteElo: this.chessData.body.game.pgnHeaders.WhiteElo,
+      blackElo: this.chessData.body.game.pgnHeaders.BlackElo,
+      averageElo:
+        (this.chessData.body.game.pgnHeaders.WhiteElo +
+          this.chessData.body.game.pgnHeaders.BlackElo) /
+        2,
+      winner: this.chessData.body.game.colorOfWinner
+        ? this.chessData.body.game.colorOfWinner
         : "draw",
-      resultMessage: resp.body.game.resultMessage,
+      resultMessage: this.chessData.body.game.resultMessage,
     };
   }
 };

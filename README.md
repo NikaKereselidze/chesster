@@ -10,6 +10,7 @@ Initialize Chesster instance
 
 ```js
 const chess = new Chesster("123456789"); // Pass in the game id for e.g: https://www.chess.com/game/live/123456789
+await chess.initialize(); // Initialize chess instance to retrieve game data
 ```
 
 Get fen
