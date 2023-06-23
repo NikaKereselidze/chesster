@@ -68,7 +68,14 @@ const all = chess.getAll();
 
 ## Installation
 
+NPM:
+
 ```
 npm install chesster
+```
+
+Yarn:
+
+```
 yarn add chesster
 ```
