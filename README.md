@@ -4,8 +4,9 @@
 
 > Do you want to access chess.com API data easily? Chesster is a great solution for that. You can retrieve any kind of data with just 1 function.
 
-## Code Samples
 
+
+## Code Samples
 Initialize Chesster instance
 
 ```js
@@ -13,59 +14,26 @@ const chess = new Chesster("123456789"); // Pass in the game id for e.g: https:/
 await chess.initialize(); // Initialize chess instance to retrieve game data
 ```
 
-Get fen
+## Example of use
 
 ```js
-const fen = chess.getFen();
+const fen = await chess.getFen();
 ```
 
-Get moves
+## List of functions
 
-```js
-const moves = chess.getMoves();
-```
 
-Get winner of the chess game
-
-```js
-const winner = chess.getWinner();
-```
-
-Get result message of the chess game
-
-```js
-const resultMessage = chess.getResultMessage();
-```
-
-Get players elo of the chess game
-
-```js
-const elo = chess.getElo();
-```
-
-Get players usernames of the chess game
-
-```js
-const playerUsernames = chess.getPlayerUsernames();
-```
-
-Get players data of the chess game (top and bottom side)
-
-```js
-const playerData = chess.getPlayerData();
-```
-
-Get average elo of both players
-
-```js
-const averageElo = chess.getAverageElo();
-```
-
-Get all data (black and white player's elo, their average elo, moves and fens with timestamps, winner and result message and etc)
-
-```js
-const all = chess.getAll();
-```
+| Functions  | Description |
+| ------------- | ------------- |
+| `getFen()`  | Get fen (A *FEN* string consists of six fields, separated by spaces. Each field provides specific information about the position)  |
+| `getMoves()`  | Get moves  |
+| `getWinner()`  | Get winner of the chess game  |
+| `getResultMessage()`  | Get result message of the chess game |
+| `getElo()`  | Get players elo of the chess game  |
+| `getPlayerUsernames()`  | Get players usernames of the chess game  |
+| `getPlayerData()`  | Get players data of the chess game (top and bottom side)  |
+| `getAverageElo()` | Get average elo of both players  |
+| `getAll()`  | Get all data (black and white player's elo, their average elo, moves and fens with timestamps, winner and result message and etc)  |
 
 ## Installation
 
