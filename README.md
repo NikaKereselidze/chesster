@@ -1,4 +1,9 @@
+
 # Chesster
+<p align="center" style="margin: 0px auto; margin-top: 15px; max-width: 600px">
+    <a href="https://npmjs.com/package/chesster"><img src="https://img.shields.io/npm/v/chesster"></a>
+    <a href="#"><img src="https://img.shields.io/npm/dt/chesster"/></a>
+</p>
 
 ## Introduction
 
