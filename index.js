@@ -5,18 +5,22 @@ module.exports = class Chesster {
   constructor(chessId) {
     this.chessId = chessId;
     this.chessAPI = new ChessWebAPI();
+    this.startingChessBoard =
+      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   }
 
   async initialize() {
+    if (!this.chessId || this.chessId == "")
+      throw new Error("Chess game ID is required");
     this.chessData = await this.chessAPI.getGameByID(this.chessId);
+    this.gameData = this.chessData.body.game;
   }
 
   async getFen() {
+    const { startingChessBoard, gameData } = this;
     const chess = new Chess();
-    const newChessBoard = new Chess(
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    );
-    chess.loadPgn(this.chessData.body.game.pgn, { sloppy: true });
+    const newChessBoard = new Chess(startingChessBoard);
+    chess.loadPgn(gameData.pgn, { sloppy: true });
     let moves = chess.history();
     let fenArray = [];
     for (let move of moves) {
@@ -29,61 +33,58 @@ module.exports = class Chesster {
   }
 
   async getElo() {
+    const { WhiteElo: whiteElo, BlackElo: blackElo } = this.gameData.pgnHeaders;
     return {
-      whiteElo: this.chessData.body.game.pgnHeaders.WhiteElo,
-      blackElo: this.chessData.body.game.pgnHeaders.BlackElo,
+      whiteElo,
+      blackElo,
     };
   }
 
   async getPlayerUsernames() {
+    const { White: whitePlayer, Black: blackPlayer } = this.gameData.pgnHeaders;
     return {
-      whitePlayer: this.chessData.body.game.pgnHeaders.White,
-      blackPlayer: this.chessData.body.game.pgnHeaders.Black,
+      whitePlayer,
+      blackPlayer,
     };
   }
 
   async getPlayerData() {
-    return {
-      topPlayer: this.chessData.body.players.top,
-      bottomPlayer: this.chessData.body.players.bottom,
-    };
+    const { top, bottom } = this.chessData.body.players;
+    return { top, bottom };
   }
 
   async getMoves() {
     const chess = new Chess();
-    chess.loadPgn(this.chessData.body.game.pgn, { sloppy: true });
+    chess.loadPgn(this.gameData.pgn, { sloppy: true });
     let moves = chess.history();
     return {
       moves,
     };
   }
   async getAverageElo() {
-    const whiteElo = this.chessData.body.game.pgnHeaders.WhiteElo;
-    const blackElo = this.chessData.body.game.pgnHeaders.BlackElo;
-    const averageElo = whiteElo + blackElo / 2;
+    const { WhiteElo, BlackElo } = this.gameData.pgnHeaders;
+    const averageElo = WhiteElo + BlackElo / 2;
     return {
       averageElo,
     };
   }
   async getWinner() {
+    const { colorOfWinner } = this.gameData;
     return {
-      winner: this.chessData.body.game.colorOfWinner
-        ? this.chessData.body.game.colorOfWinner
-        : "draw",
+      winner: colorOfWinner ? colorOfWinner : "draw",
     };
   }
   async getResultMessage() {
+    const { resultMessage } = this.gameData;
     return {
-      resultMessage: this.chessData.body.game.resultMessage,
+      resultMessage,
     };
   }
 
   async getAll() {
     const chess = new Chess();
-    const newChessBoard = new Chess(
-      "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    );
-    chess.loadPgn(this.chessData.body.game.pgn, { sloppy: true });
+    const newChessBoard = new Chess(this.startingChessBoard);
+    chess.loadPgn(this.gameData.pgn, { sloppy: true });
     let moves = chess.history();
     let fenArray = [];
     for (let move of moves) {
@@ -91,14 +92,13 @@ module.exports = class Chesster {
       fenArray.push(newChessBoard.fen());
     }
     let resultArray = [];
-    const splittedMoveTimestamps =
-      this.chessData.body.game.moveTimestamps.split(",");
+    const splittedMoveTimestamps = this.gameData.moveTimestamps.split(",");
     let formattedTimestampsArray = [];
-    const convertSecondsToHMS = (seconds) => {
-      var sec_num = parseInt(seconds, 10) / 10;
-      var hours = Math.floor(sec_num / 3600);
-      var minutes = Math.floor((sec_num - hours * 3600) / 60);
-      var seconds =
+    const convertSecondsToHMS = (sec) => {
+      let sec_num = parseInt(sec, 10) / 10;
+      let hours = Math.floor(sec_num / 3600);
+      let minutes = Math.floor((sec_num - hours * 3600) / 60);
+      let seconds =
         Math.round((sec_num - hours * 3600 - minutes * 60) * 10) / 10;
 
       if (hours < 10) {
@@ -127,27 +127,42 @@ module.exports = class Chesster {
         moveBy: i % 2 == 0 ? "white" : "black",
       });
     }
+    const {
+      White: whitePlayer,
+      Black: blackPlayer,
+      WhiteElo: whiteElo,
+      BlackElo: blackElo,
+    } = this.gameData.pgnHeaders;
+    const { top, bottom } = this.chessData.body.players;
+    const {
+      isAbortable,
+      isAnalyzable,
+      isCheckmate,
+      isStalemate,
+      isFinished,
+      isRated,
+      isResignable,
+      colorOfWinner,
+      resultMessage,
+    } = this.gameData;
     return {
       game: resultArray,
-      whitePlayer: this.chessData.body.game.pgnHeaders.White,
-      blackPlayer: this.chessData.body.game.pgnHeaders.Black,
-      isAbortable: this.chessData.body.game.isAbortable,
-      isAnalyzable: this.chessData.body.game.isAnalyzable,
-      isCheckMate: this.chessData.body.game.isCheckmate,
-      isStalemate: this.chessData.body.game.isStalemate,
-      isFinished: this.chessData.body.game.isFinished,
-      isRated: this.chessData.body.game.isRated,
-      isResignable: this.chessData.body.game.isResignable,
-      whiteElo: this.chessData.body.game.pgnHeaders.WhiteElo,
-      blackElo: this.chessData.body.game.pgnHeaders.BlackElo,
-      averageElo:
-        (this.chessData.body.game.pgnHeaders.WhiteElo +
-          this.chessData.body.game.pgnHeaders.BlackElo) /
-        2,
-      winner: this.chessData.body.game.colorOfWinner
-        ? this.chessData.body.game.colorOfWinner
-        : "draw",
-      resultMessage: this.chessData.body.game.resultMessage,
+      whitePlayer,
+      blackPlayer,
+      isAbortable,
+      isAnalyzable,
+      isCheckmate,
+      isStalemate,
+      isFinished,
+      isRated,
+      isResignable,
+      whiteElo,
+      blackElo,
+      resultMessage,
+      top,
+      bottom,
+      averageElo: (whiteElo + blackElo) / 2,
+      winner: colorOfWinner ? colorOfWinner : "draw",
     };
   }
 };
