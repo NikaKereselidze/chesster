@@ -32,6 +32,20 @@ module.exports = class Chesster {
     };
   }
 
+  async getMoves() {
+    const chess = new Chess();
+    chess.loadPgn(this.gameData.pgn, { sloppy: true });
+    let moves = chess.history();
+    return {
+      moves,
+    };
+  }
+
+  async getPGN() {
+    const { pgn } = this.gameData;
+    return { pgn };
+  }
+
   async getElo() {
     const { WhiteElo: whiteElo, BlackElo: blackElo } = this.gameData.pgnHeaders;
     return {
@@ -53,27 +67,21 @@ module.exports = class Chesster {
     return { top, bottom };
   }
 
-  async getMoves() {
-    const chess = new Chess();
-    chess.loadPgn(this.gameData.pgn, { sloppy: true });
-    let moves = chess.history();
-    return {
-      moves,
-    };
-  }
   async getAverageElo() {
     const { WhiteElo, BlackElo } = this.gameData.pgnHeaders;
-    const averageElo = WhiteElo + BlackElo / 2;
+    const averageElo = (WhiteElo + BlackElo) / 2;
     return {
       averageElo,
     };
   }
+
   async getWinner() {
     const { colorOfWinner } = this.gameData;
     return {
       winner: colorOfWinner ? colorOfWinner : "draw",
     };
   }
+
   async getResultMessage() {
     const { resultMessage } = this.gameData;
     return {
@@ -101,23 +109,16 @@ module.exports = class Chesster {
       let seconds =
         Math.round((sec_num - hours * 3600 - minutes * 60) * 10) / 10;
 
-      if (hours < 10) {
-        hours = "0" + hours;
-      }
-      if (minutes < 10) {
-        minutes = "0" + minutes;
-      }
-      if (seconds < 10) {
-        seconds = "0" + seconds;
-      }
+      if (hours < 10) hours = "0" + hours;
+      if (minutes < 10) minutes = "0" + minutes;
+      if (seconds < 10) seconds = "0" + seconds;
 
       return hours + ":" + minutes + ":" + seconds;
     };
-    for (let j = 0; j < splittedMoveTimestamps.length; j++) {
+    for (let j = 0; j < splittedMoveTimestamps.length; j++)
       formattedTimestampsArray.push(
         convertSecondsToHMS(splittedMoveTimestamps[j])
       );
-    }
 
     for (let i = 0; i < fenArray.length; i++) {
       resultArray.push({

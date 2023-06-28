@@ -30,15 +30,16 @@ const fen = await chess.getFen();
 
 | Functions  | Description |
 | ------------- | ------------- |
-| `getFen()`  | Get fen (A *FEN* string consists of six fields, separated by spaces. Each field provides specific information about the position)  |
-| `getMoves()`  | Get moves  |
-| `getWinner()`  | Get winner of the chess game  |
-| `getResultMessage()`  | Get result message of the chess game |
-| `getElo()`  | Get players elo of the chess game  |
-| `getPlayerUsernames()`  | Get players usernames of the chess game  |
-| `getPlayerData()`  | Get players data of the chess game (top and bottom side)  |
-| `getAverageElo()` | Get average elo of both players  |
-| `getAll()`  | Get all data (black and white player's elo, their average elo, moves and fens with timestamps, winner and result message and etc)  |
+| `getFen()`  | Fetch fen (A *FEN* string consists of six fields, separated by spaces. Each field provides specific information about the position)  |
+| `getMoves()`  | Fetch moves  |
+| `getPGN()`  | Fetch PGN  |
+| `getWinner()`  | Fetch winner of the chess game  |
+| `getResultMessage()`  | Fetch result message of the chess game |
+| `getElo()`  | Fetch players elo of the chess game  |
+| `getPlayerUsernames()`  | Fetch players usernames of the chess game  |
+| `getPlayerData()`  | Fetch players data of the chess game (top and bottom side)  |
+| `getAverageElo()` | Fetch average elo of both players  |
+| `getAll()`  | Fetch all data (black and white player's elo, their average elo, moves and fens with timestamps, winner and result message and etc)  |
 
 ## Installation
 

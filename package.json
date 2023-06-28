@@ -1,7 +1,7 @@
 {
   "name": "chesster",
-  "version": "1.0.7",
-  "description": "",
+  "version": "1.0.9",
+  "description": "Parser for chess.com API",
   "main": "index.js",
   "engine": {
     "node": ">=8.0.0"
