@@ -7,7 +7,7 @@
 
 ## Introduction
 
-> Do you want to access chess.com API data easily? Chesster is a great solution for that. You can retrieve any kind of data with just 1 function.
+> Parser for chess.com API
 
 
 
