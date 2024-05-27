@@ -1,5 +1,5 @@
 
-![chesster_logo](https://github.com/NikaKereselidze/chesster/assets/71851989/5a38f291-1ecb-46f5-b5ca-a84e17c23c92)
+<img width="894" alt="chesster" src="https://github.com/NikaKereselidze/chesster/assets/71851989/a059bae4-7bac-4013-a39a-545fe7b6bd9c">
 <p align="center" style="margin: 0px auto; margin-top: 15px; max-width: 600px">
     <a href="https://npmjs.com/package/chesster"><img src="https://img.shields.io/npm/v/chesster"></a>
     <a href="#"><img src="https://img.shields.io/npm/dt/chesster"/></a>
